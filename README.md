@@ -2,7 +2,7 @@
 
 **GitHub Pages:** [https://anatolii-serzhantov.github.io/the-insider-search-prototype/]
 
-**Objectives:** This project aims to improve the search quality on the website by implementing AI-powered semantic search. 
+**Objective:** This project aims to improve the search quality on the website by implementing AI-powered semantic search. 
 Project focuses on solving limitations of pure vector search by combining neural network semantic embeddings with optimized rule-based heuristics and proportional ranking algorithms.
 
 **Model used:** `Xenova/paraphrase-multilingual-mpnet-base-v2` (quantized). The model maps the user's query to a 768-dimensional dense vector space and calculates the cosine similarity against pre-computed article vectors.
