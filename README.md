@@ -1,17 +1,17 @@
-# AI semantic search in the search bar prototype for theinsider.ru
-**Model used:** paraphrase-multilingual-mpnet-base-v2
+# AI semantic search in the search bar theinsider.ru (prototype)
+
 **GitHub Pages:** [https://anatolii-serzhantov.github.io/the-insider-search-prototype/]
 
-Semantic search engine prototype built for a journalistic archive (inspired by *The Insider*). The underlying dataset was programmatically scraped, cleaned, and pre-vectorized into a JSON database, allowing advanced Natural Language Processing (NLP) to run entirely in the browser without requiring a dedicated backend GPU server.
+**Objectives:** This project aims to improve the search quality on the website by implementing AI-powered semantic search. 
+Project focuses on solving limitations of pure vector search by combining neural network semantic embeddings with optimized rule-based heuristics and proportional ranking algorithms.
 
-This project focuses on solving the classic limitations of pure vector search by combining neural network semantic embeddings with highly optimized, rule-based heuristics and proportional ranking algorithms.
+**Model used:** `Xenova/paraphrase-multilingual-mpnet-base-v2` (quantized). The model maps the user's query to a 768-dimensional dense vector space and calculates the cosine similarity against pre-computed article vectors.
 
-## Core AI Architecture
-The search is powered by **Transformers.js**, running inference completely in the browser via WebAssembly.
-* **Model:** `Xenova/paraphrase-multilingual-mpnet-base-v2` (Quantized).
-* **Mechanism:** The model maps the user's query to a 768-dimensional dense vector space and calculates the **Cosine Similarity** against pre-computed article vectors.
+**Data preparation:** The underlying dataset includes 1590 articles from https://theinsider.ru, that were parced, cleaned and pre-vectorized into a JSON database by Python script. JSON file then was zipped to meet GitHub Pages limitations on uploaded file size.
 
-## ⚙️ Advanced Search Engineering & Optimizations
+
+
+## Advanced Search Engineering & Optimizations
 While LLMs and embedding models are great at capturing the "vibe" or general topic of a text, they often fail at high-precision entity matching (e.g., confusing "1st Service" with "5th Service" due to high semantic overlap). To fix this, I engineered a custom hybrid ranking algorithm:
 
 ### 1. Soft Scaling (Proportional) Context Boosting
