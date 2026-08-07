@@ -7,7 +7,7 @@ Project focuses on solving limitations of pure vector search by combining neural
 
 **Model used:** `Xenova/paraphrase-multilingual-mpnet-base-v2` (quantized). The model maps the user's query to a 768-dimensional dense vector space and calculates the cosine similarity against pre-computed article vectors.
 
-**Data preparation:** The underlying dataset includes 1590 articles from https://theinsider.ru, that were parced, cleaned and pre-vectorized into a JSON database by Python script. JSON file then was zipped to meet GitHub Pages limitations on uploaded file size.
+**Data preparation:** The underlying dataset includes 1590 articles from https://theinsider.ru, that were parced, cleaned and pre-vectorized by Python script. JSON file then was zipped to meet GitHub Pages limitations on uploaded file size.
 
 
 
