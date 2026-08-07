@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI semantic search in the search bar | The Insider</title>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #ffffff; color: #000; }
+        
+        /* ШАПКА */
+        .top-nav { background: #000000; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; min-height: 50px; }
+        .logo { color: #ffffff; font-size: 34px; font-weight: 900; letter-spacing: -2px; font-family: 'Arial Black', Impact, sans-serif; margin: 0; }
+        
+        .header-info { text-align: right; display: flex; flex-direction: column; justify-content: center; }
+        .header-title { color: #ffffff; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }
+        .header-model { color: #888888; font-size: 12px; margin-top: 4px; font-family: monospace, Courier, monospace; }
+
+        .search-section { max-width: 1000px; margin: 60px auto 20px auto; padding: 0 20px; }
+        
+        .input-container { position: relative; width: 100%; }
+
+        #userInput { 
+            width: 100%; 
+            font-size: 24px; 
+            padding: 10px 40px 10px 0; 
+            border: none; 
+            border-bottom: 5px solid #e32636;
+            outline: none; 
+            background: transparent; 
+            color: #000; 
+            box-sizing: border-box;
+        }
+        #userInput::placeholder { color: #888; }
+        #userInput:disabled { border-bottom-color: #ccc; cursor: not-allowed; }
+
+        .clear-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            color: #000;
+            display: none; 
+            transition: stroke-width 0.2s;
+        }
+        .clear-btn:hover { stroke-width: 2; color: #e32636; }
+
+        .status { max-width: 1000px; margin: 0 auto; padding: 0 20px; color: #666; font-size: 0.9em; font-style: italic; }
+        .results-container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        
+        .article-card { 
+            display: flex; 
+            gap: 30px; 
+            padding: 40px 0; 
+            border-bottom: 1px solid #eaeaea; 
+            align-items: flex-start;
+        }
+        .article-card:last-child { border-bottom: none; }
+
+        .article-image-wrapper { flex: 0 0 42%; max-width: 42%; }
+        .article-image { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; border: 1px solid #f0f0f0; }
+        .no-image { width: 100%; aspect-ratio: 16 / 9; background: #f4f4f4; display: flex; align-items: center; justify-content: center; color: #999; font-size: 0.9em; }
+
+        .article-content { flex: 1; display: flex; flex-direction: column; }
+        
+        .article-meta-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 14px; 
+            font-size: 0.85em; 
+        }
+        
+        .category-wrapper { display: flex; align-items: center; gap: 10px; }
+        .category-line { width: 14px; height: 3px; background-color: #e32636; }
+        .category-text { font-weight: 800; color: #000; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .date-text { text-align: right; color: #888; font-weight: 600; margin-top: 2px;}
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e8f0fe; 
+            color: #1a73e8; 
+            font-weight: 800;
+            font-size: 0.75em;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            width: fit-content; 
+        }
+
+        .article-link { font-size: 1.4em; font-weight: 800; color: #000; text-decoration: none; line-height: 1.3; margin-bottom: 12px; word-break: break-all; display: block; }
+        .article-link:hover { color: #e32636; } 
+        
+        .snippet { font-size: 0.95em; color: #333; line-height: 1.7; margin-bottom: 15px; }
+        
+        i { background-color: #fff3cd; font-style: normal; padding: 0 2px; }
+
+        @media (max-width: 768px) {
+            .top-nav { flex-direction: column; gap: 10px; text-align: center; }
+            .header-info { text-align: center; }
+            .article-card { flex-direction: column; gap: 20px; }
+            .article-image-wrapper { flex: 1; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <div class="logo">THE INSIDER</div>
+        <div class="header-info">
+            <div class="header-title">AI semantic search in the search bar</div>
+            <div class="header-model">Model used: paraphrase-multilingual-mpnet-base-v2</div>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="What do you want to find?" onkeypress="handleEnter(event)" disabled>
+            <svg id="clearBtn" class="clear-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" onclick="clearSearch()">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+    </div>
+
+    <div id="status" class="status">Downloading paraphrase-multilingual-mpnet-base-v2 and vector database...</div>
+    
+    <div class="results-container" id="resultsArea"></div>
+
+<script type="module">
+        import { pipeline, cos_sim } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.16.1';
+        import { unzipSync, strFromU8 } from 'https://cdn.jsdelivr.net/npm/fflate@0.8.2/+esm';
+
+        let extractor;
+        let articlesData = [];
+        let isReady = false;
+
+        const statusEl = document.getElementById('status');
+        const inputEl = document.getElementById('userInput');
+        const resultsArea = document.getElementById('resultsArea');
+        const clearBtn = document.getElementById('clearBtn'); 
+
+        async function init() {
+            try {
+                statusEl.innerText = "Downloading and unpacking database archive...";
+                
+                const response = await fetch('database_with_vectors.zip?v=' + new Date().getTime());
+                const arrayBuffer = await response.arrayBuffer();
+                
+                const uint8Array = new Uint8Array(arrayBuffer);
+                const unzipped = unzipSync(uint8Array);
+                
+                const fileName = Object.keys(unzipped)[0];
+                const jsonString = strFromU8(unzipped[fileName]);
+                
+                articlesData = JSON.parse(jsonString);
+                
+                statusEl.innerText = "Still preparing paraphrase-multilingual-mpnet-base-v2. Please wait...";
+                extractor = await pipeline('feature-extraction', 'Xenova/paraphrase-multilingual-mpnet-base-v2', {
+                    quantized: true 
+                });
+
+                statusEl.innerText = "";
+                inputEl.disabled = false;
+                inputEl.focus();
+                isReady = true;
+
+            } catch (err) {
+                console.error(err);
+                statusEl.innerText = "Error loading database. Make sure database.zip is uploaded.";
+            }
+        }
+
+        init();
+
+        inputEl.addEventListener('input', () => {
+            if (inputEl.value.trim().length > 0) {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        });
+
+        window.clearSearch = function() {
+            inputEl.value = '';
+            clearBtn.style.display = 'none';
+            resultsArea.innerHTML = '';
+            statusEl.innerText = ''; 
+            inputEl.focus();
+        }
+
+        const EXACT_PHRASE_BONUS = 0.15; 
+        const KEYWORD_BONUS = 0.08; 
+
+        const synonymGroups = [
+            ["5", "5-я", "5-й", "пятая", "пятую", "пятой", "пятый", "пятое", "пятых", "5-й службы", "пятой службы"],
+            ["2", "2-я", "2-й", "вторая", "вторую", "второй"],
+            ["1", "1-я", "1-й", "первой", "первую", "первая", "первый"]
+        ];
+
+        function getVariations(word) {
+            for (let group of synonymGroups) {
+                if (group.includes(word)) return group; 
+            }
+            return [word]; 
+        }
+
+        function getCategory(url) {
+            let lowerUrl = url.toLowerCase();
+            if (lowerUrl.includes('/history')) return 'History';
+            if (lowerUrl.includes('/politika')) return 'Politics';
+            if (lowerUrl.includes('/inv')) return 'Investigations';
+            if (lowerUrl.includes('/obshestvo')) return 'Society';
+            if (lowerUrl.includes('/confession')) return 'Confession';
+            if (lowerUrl.includes('/ekonomika')) return 'Economics';
+            if (lowerUrl.includes('/korrupciya')) return 'Corruption';
+            return 'News'; 
+        }
+
+        function extractSnippet(text, query) {
+            let sentences = text.replace(/([.?!])\s*(?=[A-ZА-ЯЁ])/g, "$1|").split("|");
+            
+            let rawQueryWords = query.toLowerCase().replace(/[^\w\sа-яё\d]/gi, '').split(/\s+/).filter(w => w.length > 2 || /\d/.test(w));
+            let allVariations = [];
+            rawQueryWords.forEach(w => allVariations.push(...getVariations(w)));
+            
+            let matchedSentences = [];
+
+            sentences.forEach(sentence => {
+                let lowerSentence = sentence.toLowerCase();
+                let matchCount = allVariations.filter(word => lowerSentence.includes(word)).length;
+                if (matchCount > 0) {
+                    matchedSentences.push({ text: sentence, score: matchCount });
+                }
+            });
+
+            let finalSentences = [];
+            if (matchedSentences.length > 0) {
+                matchedSentences.sort((a, b) => b.score - a.score);
+                finalSentences = matchedSentences.slice(0, 3).map(s => s.text);
+            } else {
+                finalSentences = sentences.slice(0, 3);
+            }
+
+            let snippet = finalSentences.join(' ... ');
+            let uniqueVariations = [...new Set(allVariations)].sort((a, b) => b.length - a.length);
+
+            uniqueVariations.forEach(word => {
+                try {
+                    let safeWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    if (/^\d+$/.test(word)) {
+                        let regex = new RegExp(`(?<![\\d.,])(${safeWord})(?![\\d.,])`, 'gi');
+                        snippet = snippet.replace(regex, '<i><b>$1</b></i>');
+                    } else {
+                        let regex = new RegExp(`(^|[^а-яёa-z0-9>])(${safeWord})([^а-яёa-z0-9<]|$)`, 'gi');
+                        snippet = snippet.replace(regex, '$1<i><b>$2</b></i>$3');
+                        snippet = snippet.replace(regex, '$1<i><b>$2</b></i>$3');
+                    }
+                } catch(e) { } 
+            });
+
+            return snippet.trim();
+        }
+
+        window.handleEnter = function(e) {
+            if (e.key === 'Enter') window.sendMessage();
+        }
+
+        window.sendMessage = async function() {
+            if (!isReady) return;
+            
+            const query = inputEl.value.trim();
+            if (!query) return;
+
+            resultsArea.innerHTML = '';
+            statusEl.innerText = "Looking for matches...";
+
+            try {
+                const queryOutput = await extractor(query, { pooling: 'mean', normalize: true });
+                const queryVector = Array.from(queryOutput.data);
+
+                const rawQueryWords = query.toLowerCase().replace(/[^\w\sа-яё\d]/gi, '').split(/\s+/).filter(w => w.length > 2 || /\d/.test(w));
+                                        
+                let results = articlesData.map(article => {
+                    let semanticScore = cos_sim(queryVector, article.vector);
+                    let keywordBonus = 0;
+                    let penalty = 0;
+                    let textLower = article.text.toLowerCase();
+
+                    let wants5 = rawQueryWords.some(w => ["5", "5-я", "5-й", "пятая", "пятую", "пятой", "пятый"].includes(w));
+                    let wants2 = rawQueryWords.some(w => ["2", "2-я", "2-й", "вторая", "вторую", "второй"].includes(w));
+                    let wants1 = rawQueryWords.some(w => ["1", "1-я", "1-й", "первая", "первую", "первой", "первый"].includes(w));
+                    let wantsNavalny = rawQueryWords.some(w => ["навальный", "навального", "навальному", "навальным", "навальном"].includes(w));
+
+                    let has5 = /(пята|пяту|пятой|5-я|5-й|5)\s*служб/i.test(textLower);
+                    let has2 = /(втора|втору|второй|2-я|2-й|2)\s*служб/i.test(textLower);
+                    let has1 = /(перва|перву|первой|1-я|1-й|1)\s*служб/i.test(textLower);
+
+                    if (wants5 && (has1 || has2) && !has5) penalty = 0.40;
+                    if (wants2 && (has1 || has5) && !has2) penalty = 0.40;
+                    if (wants1 && (has2 || has5) && !has1) penalty = 0.40;
+
+                    let targetBonus = 0;
+                    if (wants5 && has5) targetBonus = 0.30;
+                    if (wants2 && has2) targetBonus = 0.30;
+                    if (wants1 && has1) targetBonus = 0.30;
+                    
+                    if (textLower.includes(query.toLowerCase())) {
+                        keywordBonus += EXACT_PHRASE_BONUS;
+                    }
+                    
+                    rawQueryWords.forEach(word => {
+                        let variations = getVariations(word);
+                        let isMatched = variations.some(v => {
+                            let safeV = v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            try {
+                                if (/^\d+$/.test(v)) {
+                                    return new RegExp(`(?<![\\d.,])${safeV}(?![\\d.,])`, 'i').test(textLower);
+                                } else {
+                                    return new RegExp(`(^|[^а-яёa-z0-9])(${safeV})([^а-яёa-z0-9]|$)`, 'i').test(textLower);
+                                }
+                            } catch(e) { return false; }
+                        });
+                        if (isMatched) keywordBonus += KEYWORD_BONUS;
+                    });
+
+                    let baseScore = semanticScore + keywordBonus + targetBonus - penalty;
+
+                    let urlBonus = 0;
+                    if (wantsNavalny && article.url.toLowerCase().includes('/inv')) {
+                        urlBonus = Math.max(0, baseScore) * 0.35;
+                    }
+
+                    let finalScore = baseScore + urlBonus;
+                    finalScore = Math.min(1.0, finalScore);
+
+                    return { ...article, score: finalScore };
+                });
+
+                let relevantResults = results.filter(r => r.score >= 0.25);
+                relevantResults.sort((a, b) => b.score - a.score);
+                
+                let uniqueResults = [];
+                let seenUrls = new Set();
+                
+                for (let r of relevantResults) {
+                    if (!seenUrls.has(r.url)) { 
+                        seenUrls.add(r.url);    
+                        uniqueResults.push(r);  
+                    }
+                }
+                
+                let top15Results = uniqueResults.slice(0, 20);
+                
+                statusEl.innerText = "";
+
+                if (top15Results.length > 0) {
+                    let responseHtml = `<div style="text-align: right; font-size: 0.85em; color: #999; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: -1px;">Top ${top15Results.length} most relevant articles</div>`;
+                    
+                    top15Results.forEach((result) => {
+                        let conf = Math.round(result.score * 100);
+                        let snippet = extractSnippet(result.text, query);
+                        let categoryName = getCategory(result.url);
+                        
+                        let shortDate = result.publication_date ? String(result.publication_date).substring(0, 10) : '';
+                        
+                        let imgHtml = result.image_link 
+                            ? `<div class="article-image-wrapper"><img src="${result.image_link}" alt="Article cover" class="article-image"></div>` 
+                            : `<div class="article-image-wrapper"><div class="no-image">No Image</div></div>`;
+
+                        responseHtml += `
+                        <div class="article-card">
+                            ${imgHtml}
+                            <div class="article-content">
+                                <div class="article-meta-header">
+                                    <div class="category-wrapper">
+                                        <div class="category-line"></div>
+                                        <span class="category-text">${categoryName}</span>
+                                    </div>
+                                    <div class="date-text">
+                                        <div>${shortDate}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="ai-badge">AI Confidence: ${conf}%</div>
+                                
+                                <a href="${result.url}" target="_blank" class="article-link">${result.url}</a> 
+                                <div class="snippet">...${snippet}...</div>
+                            </div>
+                        </div>`;
+                    });
+                    
+                    resultsArea.innerHTML = responseHtml;
+                } else {
+                    resultsArea.innerHTML = "<p style='color: #666; margin-top: 30px;'>Nothing found for your request. Try rephrase it.</p>";
+                }
+                
+            } catch(e) {
+                statusEl.innerText = "An error occurred while searching.";
+                console.error(e);
+            }
+        }
+    </script>
+</body>
+</html>
