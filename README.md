@@ -1,6 +1,6 @@
 # AI semantic search in the search bar prototype for theinsider.ru
 **Model used:** paraphrase-multilingual-mpnet-base-v2
-**GitHub Pages:** https://anatolii-serzhantov.github.io/the-insider-search-prototype/ 
+**GitHub Pages:** [https://anatolii-serzhantov.github.io/the-insider-search-prototype/]
 
 Semantic search engine prototype built for a journalistic archive (inspired by *The Insider*). The underlying dataset was programmatically scraped, cleaned, and pre-vectorized into a JSON database, allowing advanced Natural Language Processing (NLP) to run entirely in the browser without requiring a dedicated backend GPU server.
 
