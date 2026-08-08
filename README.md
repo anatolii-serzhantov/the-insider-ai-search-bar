@@ -1,4 +1,4 @@
-# AI semantic search in the search bar theinsider.ru (prototype)
+# AI semantic search in the search bar for The Insider (prototype)
 
 **GitHub Pages:** https://anatolii-serzhantov.github.io/the-insider-search-prototype/
 
