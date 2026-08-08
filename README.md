@@ -17,7 +17,7 @@ Project focuses on solving limitations of pure vector search by combining neural
 To handle the complexity of the Russian language, the search engine automatically expands numerical and entity queries into morphological synonym groups (e.g., `"5"` expands to `["5", "5-я", "5-й", "пятая", "пятую", "пятой"]`) before evaluating exact match bonuses and extracting snippets.
 
 ### 2. Negative topic penalties
-To prevent the neural network from returning highly semantically related but factually incorrect results, I implemented a penalty system. If a user explicitly searches for the "5th Service", but the article heavily discusses the "1st Service" and lacks the "5th", the algorithm applies a strict **-40% penalty**, immediately dropping the irrelevant cluster from the top results.
+To prevent the neural network from returning highly semantically related but factually incorrect results, I implemented a penalty system. If a user explicitly searches for the "5th Service", but the article heavily discusses the "1st Service" and lacks the "5th", the algorithm applies a strict -40% penalty, immediately dropping the irrelevant cluster from the top results.
 
 ### 3. Anti-false-positive regex
 Keyword bonuses are protected by advanced Regular Expressions using Negative Lookbehinds `(?<![\d.,])`. This ensures that when the algorithm searches for a specific number (like the "2nd Service"), it actively ignores decimals (e.g., `3888.2 sq meters`), preventing corrupted relevance scores and false highlighting.
@@ -34,6 +34,8 @@ In https://theins.ru/inv/283609 there are
 
 Default theinsider.ru search doesn´t suggest
 <div align="center"><img src="images/theinsru_винодельная_реймана_выдача.png" alt="reyman_listing"></div>
+
+While AI search 
 
 ### 6. Article snippet extraction:
 The engine splits articles into sentences, scores each sentence based on query/synonym density, and dynamically extracts the top 3 most relevant sentences. Matches are highlighted using safe Regex replacements.
