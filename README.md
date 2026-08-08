@@ -28,7 +28,10 @@ For high-priority topics (e.g., queries about politicians), articles in the `/in
 
 <div align="center"><img src="images/new_project_навальный_выдача_гифка.gif" alt="navalny"></div>
 
-### 5. Examples of improving search results
+### 5. Article snippet extraction:
+The engine splits articles into sentences, scores each sentence based on query/synonym density, and dynamically extracts the top 3 most relevant sentences. Matches are highlighted using safe Regex replacements.
+
+## Examples of improving search results
 In https://theins.ru/inv/283609 there are 
 <div align="center"><img src="images/theinsru_винодельная_реймана_статья.png" alt="reyman_article"></div>
 
@@ -36,9 +39,6 @@ Default theinsider.ru search doesn´t suggest
 <div align="center"><img src="images/theinsru_винодельная_реймана_выдача.png" alt="reyman_listing"></div>
 
 While AI search 
-
-### 6. Article snippet extraction:
-The engine splits articles into sentences, scores each sentence based on query/synonym density, and dynamically extracts the top 3 most relevant sentences. Matches are highlighted using safe Regex replacements.
 
 ## Plans for further improvement of the search engine
 
