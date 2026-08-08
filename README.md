@@ -9,7 +9,7 @@ Project focuses on solving limitations of pure vector search by combining neural
 
 **Data preparation:** The underlying dataset includes 1590 articles from https://theinsider.ru, that were parced, cleaned and pre-vectorized by Python script.
 
-![5th_listing](images/new_project_5_служба_фсб_выдача_гифка.gif)
+<div align="center">![5th_listing](images/new_project_5_служба_фсб_выдача_гифка.gif)</div>
 
 ![vinodelnya_listing](images/new_project_винодельня_выдача_гифка.gif)
 
