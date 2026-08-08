@@ -8,7 +8,7 @@ Project focuses on solving limitations of pure vector search by combining neural
 **Model used:** `Xenova/paraphrase-multilingual-mpnet-base-v2` (quantized). The model maps the user's query to a 768-dimensional dense vector space and calculates the cosine similarity against pre-computed article vectors.
 
 **Data preparation:** The underlying dataset includes 1590 articles from https://theinsider.ru, that were parced, cleaned and pre-vectorized by Python script.
-
+![vinodelnya_listing](images/new_project_винодельня_выдача_гифка.gif)
 
 ## Advanced Search Engineering & Optimizations
 While LLMs and embedding models are great at capturing the "vibe" or general topic of a text, they often fail at high-precision entity matching (e.g., confusing "1st Service" with "5th Service" due to high semantic overlap). To fix this, I engineered a custom hybrid ranking algorithm:
