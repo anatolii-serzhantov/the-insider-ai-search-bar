@@ -197,10 +197,12 @@
         const EXACT_PHRASE_BONUS = 0.15; 
         const KEYWORD_BONUS = 0.08; 
 
-        const synonymGroups = [
+ const synonymGroups = [
             ["5", "5-я", "5-й", "пятая", "пятую", "пятой", "пятый", "пятое", "пятых", "5-й службы", "пятой службы"],
             ["2", "2-я", "2-й", "вторая", "вторую", "второй"],
-            ["1", "1-я", "1-й", "первой", "первую", "первая", "первый"]
+            ["1", "1-я", "1-й", "первой", "первую", "первая", "первый"],
+            ["нии-2", "нии2", "нии 2", "второй нии", "институт криминалистики", "института криминалистики", "институтом криминалистики"],
+            ["фсб", "федеральная служба безопасности", "федеральной службы безопасности", "федеральную службу безопасности"]
         ];
 
         function getVariations(word) {
@@ -292,23 +294,36 @@
                     let penalty = 0;
                     let textLower = article.text.toLowerCase();
 
+                   // 1. Проверяем намерения пользователя
                     let wants5 = rawQueryWords.some(w => ["5", "5-я", "5-й", "пятая", "пятую", "пятой", "пятый"].includes(w));
                     let wants2 = rawQueryWords.some(w => ["2", "2-я", "2-й", "вторая", "вторую", "второй"].includes(w));
                     let wants1 = rawQueryWords.some(w => ["1", "1-я", "1-й", "первая", "первую", "первой", "первый"].includes(w));
                     let wantsNavalny = rawQueryWords.some(w => ["навальный", "навального", "навальному", "навальным", "навальном"].includes(w));
+                    
+                    // НОВОЕ: Проверяем, ищет ли пользователь НИИ-2
+                    let wantsNII2 = query.toLowerCase().includes("нии 2") || query.toLowerCase().includes("нии-2") || rawQueryWords.includes("нии2") || rawQueryWords.includes("криминалистики");
 
+                    // 2. Ищем сущности в тексте (с учетом падежей)
                     let has5 = /(пята|пяту|пятой|5-я|5-й|5)\s*служб/i.test(textLower);
                     let has2 = /(втора|втору|второй|2-я|2-й|2)\s*служб/i.test(textLower);
                     let has1 = /(перва|перву|первой|1-я|1-й|1)\s*служб/i.test(textLower);
+                    
+                    // НОВОЕ: Проверяем, есть ли в статье Институт криминалистики или НИИ-2
+                    let hasNII2 = /(нии-2|нии 2|нии2|институт[а-я]?\s+криминалистики)/i.test(textLower);
 
+                    // 3. Штрафы (если искал 5 службу, а нашел 1-ю)
                     if (wants5 && (has1 || has2) && !has5) penalty = 0.40;
                     if (wants2 && (has1 || has5) && !has2) penalty = 0.40;
                     if (wants1 && (has2 || has5) && !has1) penalty = 0.40;
 
+                    // 4. Супер-бонусы за точное попадание в нужную сущность
                     let targetBonus = 0;
                     if (wants5 && has5) targetBonus = 0.30;
                     if (wants2 && has2) targetBonus = 0.30;
                     if (wants1 && has1) targetBonus = 0.30;
+                    
+                    // НОВОЕ: Даем огромный бонус, если нашли НИИ-2
+                    if (wantsNII2 && hasNII2) targetBonus = 0.35;
                     
                     if (textLower.includes(query.toLowerCase())) {
                         keywordBonus += EXACT_PHRASE_BONUS;
