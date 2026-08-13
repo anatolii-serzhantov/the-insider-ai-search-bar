@@ -1,6 +1,6 @@
 # AI-based search in the search bar for The Insider (prototype)
 
-**GitHub Pages:** https://anatolii-serzhantov.github.io/the-insider-search-prototype/
+**GitHub Pages:** https://anatolii-serzhantov.github.io/the-insider-ai-search-bar/
 
 **Objective:** This project aims to enhance the search precision and context awareness on the website by implementing AI-powered semantic search. 
 Project focuses on solving limitations of pure vector search by combining model´s semantic embeddings with optimized rule-based heuristics and proportional ranking algorithms.
