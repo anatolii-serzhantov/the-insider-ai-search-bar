@@ -34,16 +34,11 @@ Image 2. Search query "Navalny" ("Навальный")
 The engine splits articles into sentences, scores each sentence based on query/synonym density, and dynamically extracts the top 3 most relevant sentences. Matches are highlighted using safe Regex replacements.
 
 ## Examples of enhancing search results
-In https://theins.ru/inv/283609 there are 
+1. In the article theins.ru/inv/283609 mentioned politician "Raiman" ("Рейман") in a context of owning a winery ("винодельня"). In the case of searching "Винодельня Реймана" ("Reiman Winery") default The Insider´s search doesn´t suggest the link to associated investigation. While AI search prototype demonstrates 
 <div align="center"><img src="images/theinsru_винодельная_реймана_статья.png" alt="reyman_article"></div>
-Image 3. 
-
-Default theinsider.ru search doesn´t suggest
-
+Image 3. Default The Insider search doesn´t suggest
 <div align="center"><img src="images/theinsru_винодельная_реймана_выдача.png" alt="reyman_listing"></div>
 Image 4. Search query
-
-While AI search 
 
 ## Plans for further improvement of the search engine
 
