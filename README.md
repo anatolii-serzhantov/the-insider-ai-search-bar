@@ -10,6 +10,7 @@ Project focuses on solving limitations of pure vector search by combining model�
 **Data preparation:** The underlying dataset includes 1590 articles from https://theinsider.ru, that were parced, cleaned and pre-vectorized using Python script.
 
 <div align="center"><img src="images/new_project_5_служба_фсб_выдача_гифка.gif" alt="5th_listing"></div>
+Image 1. Example of a search query
 
 ## Applied search optimization:
 
@@ -27,6 +28,7 @@ Instead of using hard cut-offs or blind score boosts (which create a "cliff effe
 For high-priority topics (e.g., queries about politicians), articles in the `/investigations` category receive a dynamic bonus. The bonus is calculated as a percentage of the article's *base semantic score*. A highly relevant article gets a massive boost, while a weak article gets a negligible one, keeping the Top 20 results pure.
 
 <div align="center"><img src="images/new_project_навальный_выдача_гифка.gif" alt="navalny"></div>
+Image 1. Example of a search query
 
 ### 5. Article snippet extraction:
 The engine splits articles into sentences, scores each sentence based on query/synonym density, and dynamically extracts the top 3 most relevant sentences. Matches are highlighted using safe Regex replacements.
@@ -34,9 +36,12 @@ The engine splits articles into sentences, scores each sentence based on query/s
 ## Examples of improving search results
 In https://theins.ru/inv/283609 there are 
 <div align="center"><img src="images/theinsru_винодельная_реймана_статья.png" alt="reyman_article"></div>
+Image 1. Example of a search query
 
 Default theinsider.ru search doesn´t suggest
+
 <div align="center"><img src="images/theinsru_винодельная_реймана_выдача.png" alt="reyman_listing"></div>
+Image 1. Example of a search query
 
 While AI search 
 
