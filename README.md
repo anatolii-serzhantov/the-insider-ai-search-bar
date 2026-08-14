@@ -43,5 +43,8 @@ Image 4. Actual The Insider´s search doesn´t suggest link to the original arti
 Image 5. AI-based search shows the searched investigation in the 1st place in search results by vector search
 
 ## Plans for further improvement
-1. RAG - generation for article text preview.
-2. Implementation in the site's backend.
+1. RAG - generation for article text preview with `DeepSeek-V4-Flash`.
+2. Search corner cases discussion and implementation.
+3. Implementation in the site's backend (client-side to server-side):
+   - `Llama 3` or `Qwen 2.5` server deployment.
+   - Vector storing database deployment `PostgreSQL` with `pgvector` 
