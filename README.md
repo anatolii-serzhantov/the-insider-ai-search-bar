@@ -42,7 +42,7 @@ Image 4. Actual The Insider´s search doesn´t suggest link to the original arti
 <div align="center"><img src="images/ai_search_винодельная_реймана_выдача_гиф.gif" alt="reyman_listing"></div>
 Image 5. AI-based search shows the searched investigation in the 1st place in search results by vector search
 
-## Plans for further improvement
+## Roadmap
 1. RAG - generation for article text preview with `DeepSeek-V4-Flash`.
 2. Search corner cases discussion and implementation.
 3. Implementation in the site's backend (client-side to server-side):
