@@ -34,15 +34,14 @@ Image 2. Search query "Navalny" ("Навальный")
 The engine splits articles into sentences, scores each sentence based on query/synonym density, and dynamically extracts the top 3 most relevant sentences. Matches are highlighted using safe Regex replacements.
 
 ## Examples of enhancing search results
-1. In the article theins.ru/inv/283609 mentioned politician "Raiman" ("Рейман") in a context of owning a winery ("винодельня"). In the case of searching "Винодельня Реймана" ("Reiman Winery") default The Insider´s search doesn´t suggest the link to associated investigation. While AI search prototype demonstrates 
+1. In the article theins.ru/inv/283609 mentioned politician "Raiman" ("Рейман") in a context of owning a winery ("винодельня"). In the case of searching "Винодельня Реймана" ("Reiman Winery"). Actual The Insider´s search doesn´t suggest the link to associated investigation. While AI-based search demonstrates link to the original article by vector search.
 <div align="center"><img src="images/theinsru_винодельная_реймана_статья.png" alt="reyman_article"></div>
 Image 3. Mention of keywords in the original searched article
 <div align="center"><img src="images/theinsru_винодельная_реймана_выдача.png" alt="reyman_listing"></div>
 Image 4. Actual The Insider´s search doesn´t suggest link to the original article
 <div align="center"><img src="images/ai_search_винодельная_реймана_выдача_гиф.gif" alt="reyman_listing"></div>
-Image 5. AI search prototype shows the searched investigation in the 1st place in search results
+Image 5. AI-based search shows the searched investigation in the 1st place in search results by vector search
 
-## Plans for further improvement of the search engine
+## Plans for further improvement
 1. RAG - generation for article text preview.
-2. 
-## Plans for implementation in the site's backend
+2. Implementation in the site's backend.
