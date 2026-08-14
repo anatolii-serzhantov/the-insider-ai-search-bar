@@ -1,4 +1,4 @@
-# AI-based search in the search bar for The Insider (prototype)
+# AI-based search in the search bar for The Insider [prototype]
 
 **GitHub Pages** 
 Live Demo: https://anatolii-serzhantov.github.io/the-insider-ai-search-bar/
