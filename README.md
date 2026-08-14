@@ -16,7 +16,7 @@ Image 1. Search query "5th Service" ("5-я служба")
 ## Applied search optimization:
 
 ### 1. Negative topic penalties
-To prevent the model from returning highly semantically related but factually incorrect results, I implemented a penalty system. If a user explicitly searches for the "5th Service" ("5-я служба"), but the article heavily discusses the "1st Service" and lacks the "5th", the algorithm applies -40% penalty, dropping the irrelevant cluster from the top results.
+Implemented penalty system to prevent the model from returning highly semantically related but factually incorrect results. Differentiation between the "1th Service", "2th Service" and "5th Service" was applied. If a user searches for the "5th Service" ("5-я служба"), but the article heavily discusses the "1st Service" and lacks the "5th", the algorithm applies -40% penalty, dropping the irrelevant cluster from the top results. 
 
 ### 2. Dynamic morphological expansion
 To handle the variations in word endings in the Russian, the search engine expands numerical and entity queries into morphological synonym groups (e.g., `"5"` expands to `["5-я", "5-й", "пятая", "пятую", "пятой"]`).
