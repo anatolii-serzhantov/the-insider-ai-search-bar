@@ -22,7 +22,7 @@ To prevent the model from returning highly semantically related but factually in
 To handle the variations in word endings in the Russian, the search engine expands numerical and entity queries into morphological synonym groups (e.g., `"5"` expands to `["5-я", "5-й", "пятая", "пятую", "пятой"]`).
 
 ### 3. Anti-false-positive regex
-Keyword bonuses are protected by advanced Regular Expressions using Negative Lookbehinds `(?<![\d.,])`. This ensures that when the algorithm searches for a specific number (like the "2nd Service"), it actively ignores decimals (e.g., `3888.2 sq meters`), preventing corrupted relevance scores and false high search result position.
+Keyword bonuses are protected by advanced Regular Expressions using Negative Lookbehinds `(?<![\d.,])`. This ensures that when the algorithm searches for a specific number (like the "2nd Service"), it ignores decimals (e.g., `2` in `3888.2 sq meters`), preventing corrupted relevance scores and false high search result position.
 
 ### 4. Proportional context boosting
 Proportional boosting was implemented for queries about Alexey Navalny in which articles in the `/investigations` category receive a bonus. A highly relevant investigations about Navalny, which are among the outlet's key articles, are given priority in search results.
